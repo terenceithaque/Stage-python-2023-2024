@@ -1,0 +1,3 @@
+Generation 0 : F
+Generation 1 :FF[+F-F]FF[-F+F]FF
+Generation 2 : FFF[+F-F]FF[-F+F]FF[+F-F]FF[-F+F]FFFF[+F-F]FF[-F+F]FF[+FF[+F-F]FF[-F+F]FF-F]FF[+F-F]FF[-F+F]FFFF[+F-F]FF[-F+F]FF[-FF[+F-F]FF[-F+F]FF+FF[+F-F]FF[-F+F]FF]FF[+F-F]FF[-F+F]FFFF[+F-F]FF[-F+F]FF

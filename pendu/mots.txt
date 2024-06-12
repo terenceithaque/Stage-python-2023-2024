@@ -1,0 +1,12 @@
+Hello
+Bonjour
+Bénévolat
+Informatique
+Python
+Petit-déjeuner
+Déjeuner
+Goûter
+Dîner
+Chat
+Chien
+Lion

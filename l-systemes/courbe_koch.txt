@@ -1,0 +1,4 @@
+Génération 0: F
+Génération 1 : F + F - F - F + F
+Génération 2 : F + F - F - F + F + F + F - F - F + F - F + F - F - F + F - F + F - F - F + F + F + F - F - F + F
+Génération 3 : F + F - F - F + F + F + F - F - F + F - F + F - F - F + F - F + F - F - F + F + F + F + F - F - F + F - F - F + F + F - F + F - F - F + F + F - F - F + F - F - F + F + F - F + F - F - F + F - F - F + F + F + F + F - F - F + F + F - F - F + F - F - F + F + F + F - F - F + F

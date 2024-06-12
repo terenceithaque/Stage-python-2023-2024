@@ -1,0 +1,7 @@
+Génération 0 : A
+Génération 1 : AB
+Génération 2 : AB A
+Génération 3 : AB A AB
+Génération 4 : AB A AB AB A
+Génération 5 : AB A AB AB A AB A AB
+Génération 6 : AB A AB A  AB A AB A AB
