@@ -13,7 +13,7 @@ touches_directions = {
 } # Dictionnaire qui liste pour chaque touche la direction dans laquelle elle va déplacer les nombres de la grille
 
 def generer_grille():
-    "Générer une grille de jeu"
+    "Générer une grille de jeu de dimensions 4x4"
     grille = [[2,0,2,2] for i in range(4)] # Générer une grille de quatre case par ligne
     return grille
 
@@ -41,7 +41,7 @@ def coords_aleat(grille):
 
 
 def entree_utilisateur():
-    "Demander une entrée à l'utilisateur. On s'en servira pour déterminer le sens dans lequel doivent être déplacés les nombres de la grille"
+    "Demander une entrée à l'utilisateur. On s'en servira pour déterminer le sens dans lequel doivent être déplacés les nombres de la grille. Si la touche pressé n'est pas définie dans le dictionnaire touches_directions, alors redemande la saisie d'une touche à l'utilisateur jusqu'à ce que celle-ci soit définie"
         
     touche = input("Appuyez sur une seule touche (z, q, s ou d) et appuyez sur Entrée:") # Demander à l'utilisateur de presser une touche du clavuer
     while touche not in touches: # Si l'utilisateur a appuyé sur une touche qui n'est pas comprise par le jeu
@@ -186,6 +186,41 @@ def deplacer_nombres(grille, direction):
 
         # Logique du déplacement à mettre ci-dessous
 
+        for ligne in range(len(grille)-1, -1, -1): # On parcoure les lignes de la grille de bas en haut
+            print("Numéro de la ligne :", ligne)
+            for colonne in range(len(grille[ligne])): # Pour chaque colonne de la ligne
+                nombre_case_actuelle = grille[ligne][colonne] # Nombre dans la case actuelle
+                for ligne2 in range(ligne-1, -1, -1): # Pour chaque ligne avant la ligne actuelle
+                    #print("Ligne précédent la ligne actuelle :", ligne2)
+                    if grille[ligne2][colonne] == nombre_case_actuelle: # Si le nombre contenant dans la case de la ligne précédente correspond au nombre de la case actuelle
+                        grille[ligne][colonne] = nombre_case_actuelle*2 # On fusionne le nombre des deux cases par une multiplication
+                        grille[ligne2][colonne] = 0 # On vide la case précédente
+                        break
+        
+        
+        for ligne in range(len(grille) -1): # Pour chaque ligne de la grille
+            for colonne in range(len(grille[ligne])): # Pour chaque colonne de la ligne
+                case_actuelle = grille[ligne][colonne] # Case actuelle
+                case_suivante = grille[ligne +1][colonne] # Case de la ligne suivante
+                if grille[ligne+1][colonne] == 0: # Si la case suivante est vide
+                    
+                    if case_actuelle > 0: # Si la case actuelle n'est pas vide
+                        grille[ligne+1][colonne] = case_actuelle  # Déplacer le nombre de la case actuelle sur la case suivante
+                        grille[ligne][colonne] = 0 # On vide la case actuelle
+                        #grille[ligne +1][colonne] = generer_nombre_a_apparaitre() # On génère un nouveau nombre dans la case vidée
+
+                
+
+        coords_apparation_nombre = coords_aleat(grille) # Générer des coordonnées aléatoires pour le nouveau nombre à générer
+        print("Coordonnées du nombre à apparaitre :", coords_apparation_nombre)
+        ligne_nombre = coords_apparation_nombre[0] # Ligne dans laquelle le nombre doit apparaître
+        #print("Ligne dans laquelle le nombre doit apparaitre :", ligne_nombre)
+        colonne_nombre = coords_apparation_nombre[1] # Colonne de la ligne dans laquelle le nombre doit apparaître
+        #print("Colonne de la ligne dans laquelle le nombre doit apparaitre :", colonne_nombre)
+
+        grille[ligne_nombre][colonne_nombre] = generer_nombre_a_apparaitre() # Générer le nombre et le placer dans la grille aux coordonnées choisies
+                        
+
     if direction == "droite": # Si on doit déplacer les nombres vers la droite
         print("Déplacement vers la droite")
 
@@ -193,10 +228,12 @@ def deplacer_nombres(grille, direction):
         # Logique du déplacement à mettre ci-dessous          
 
 
+
+"""
 def verifier_nombres_equivalents(direction):
     "Vérifier si deux nombres équivalents peuvent être additionnés dans une certaine direction"
     pass
-
+"""
 
 
 
