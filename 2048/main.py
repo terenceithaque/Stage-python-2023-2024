@@ -5,6 +5,9 @@ touches = ["z","q","s","d"] # Listes des touches auxquelles le jeu réagit
 
 coords_cases_occuppees = [] # Coordonnées des cases occupées 
 
+
+nombre_final = 2048 # Nombre final que le joueur doit obtenir pour gagner
+
 touches_directions = {
     "z":"haut",
     "q":"gauche",
@@ -16,6 +19,13 @@ def generer_grille():
     "Générer une grille de jeu de dimensions 4x4"
     grille = [[2,0,2,2] for i in range(4)] # Générer une grille de quatre case par ligne
     return grille
+
+
+
+
+
+
+
 
 
 def mettre_a_jour_grille(grille, ligne=0, colonne=0,nombre=2):
@@ -90,7 +100,7 @@ def grille_pleine(grille):
 def deplacer_nombres(grille, direction):
     "Déplacer des nombres de la grille selon une direction précise"
     if direction == "haut": # Si on doit déplacer les nombres vers le haut
-        print("Déplacement vers le haut")
+        #print("Déplacement vers le haut")
 
         # Logique du déplacement à mettre ci-dessous
 
@@ -99,6 +109,7 @@ def deplacer_nombres(grille, direction):
                 nombre_case_actuelle = grille[ligne][colonne] # Nombre contenu dans la case actuelle
                 for ligne2 in range(ligne+1, len(grille)): # Parcourir toutes les lignes à partir de l'actuelle
                     if nombre_case_actuelle > 0: # Si le nombre est supérieur à zéro
+
                         case_suivante = grille[ligne2][colonne] # Case dans la ligne suivante
                         """if case_precedente == 0 :# Si la case sur la ligne précédente est vide
                             case_precedente = nombre_case_actuelle # Mettre à jour le nombre de la case sur la ligne précédente"""
@@ -106,24 +117,34 @@ def deplacer_nombres(grille, direction):
                         if case_suivante== nombre_case_actuelle: # Si le nombre dans la case sur la ligne précédente correspond à celui de la case actuelle
                             grille[ligne2][colonne] = 0 # Mettre la case précédente à 0
                             grille[ligne][colonne] = nombre_case_actuelle*2 # Supprimer le nombre de la case actuelle
-                            break
-                        
-
-
-
                         
                         
-                       
+                        
+                        
+                
+                        
+                        
+                        
+                            
+            
 
-        for ligne in range(len(grille) -1): # Pour chaque ligne de la grille
-            for colonne in range(len(grille[ligne])): # Pour chaque colonne de la ligne
-                case_suivante = grille[ligne +1][colonne] # Case de la ligne suivante
-                if grille[ligne][colonne] == 0: # Si la case actuelle est vide
+                        
+        for r in range(len(grille)): # Pour autant de lignes qu'il n'y a dans la grille              
+            for ligne in range(len(grille) -1): # Pour chaque ligne de la grille
+                for colonne in range(len(grille[ligne])): # Pour chaque colonne de la ligne
+                    case_suivante = grille[ligne +1][colonne] # Case de la ligne suivante
+                    if grille[ligne][colonne] == 0: # Si la case actuelle est vide
                     
-                    if case_suivante > 0: # Si la case suivante n'est pas vide
-                        grille[ligne][colonne] = case_suivante # Déplacer le nombre de la case suivante sur la case actuelle
-                        grille[ligne+1][colonne] = 0 # On vide la case suivante
+                        if case_suivante > 0: # Si la case suivante n'est pas vide
+                            grille[ligne][colonne] = case_suivante # Déplacer le nombre de la case suivante sur la case actuelle
+                            grille[ligne+1][colonne] = 0 # On vide la case suivante
                         #grille[ligne +1][colonne] = generer_nombre_a_apparaitre() # On génère un nouveau nombre dans la case vidée
+
+            continue
+                        
+                        
+            
+
 
         coords_apparation_nombre = coords_aleat(grille) # Générer des coordonnées aléatoires pour le nouveau nombre à générer
         print("Coordonnées du nombre à apparaitre :", coords_apparation_nombre)
@@ -149,7 +170,7 @@ def deplacer_nombres(grille, direction):
                     
 
     if direction == "gauche": # Si on doit déplacer les nombres vers la gauche
-        print("Déplacement vers la gauche")   
+        #print("Déplacement vers la gauche")   
 
         # Logique du déplacement à mettre ci-dessous
 
@@ -182,33 +203,44 @@ def deplacer_nombres(grille, direction):
 
 
     if direction == "bas": # Si on doit déplacer les nombres vers le bas
-        print("Déplacement vers le bas")
+        #print("Déplacement vers le bas")
 
         # Logique du déplacement à mettre ci-dessous
 
-        for ligne in range(len(grille)-1, -1, -1): # On parcoure les lignes de la grille de bas en haut
-            print("Numéro de la ligne :", ligne)
+        for ligne in range(len(grille)): # On parcoure les lignes de la grille
+            #print("Numéro de la ligne :", ligne)
             for colonne in range(len(grille[ligne])): # Pour chaque colonne de la ligne
                 nombre_case_actuelle = grille[ligne][colonne] # Nombre dans la case actuelle
                 for ligne2 in range(ligne-1, -1, -1): # Pour chaque ligne avant la ligne actuelle
                     #print("Ligne précédent la ligne actuelle :", ligne2)
-                    if grille[ligne2][colonne] == nombre_case_actuelle: # Si le nombre contenant dans la case de la ligne précédente correspond au nombre de la case actuelle
-                        grille[ligne][colonne] = nombre_case_actuelle*2 # On fusionne le nombre des deux cases par une multiplication
+                    if grille[ligne2][colonne] == nombre_case_actuelle: # Si le nombre contenant dans une des cases précédentes correspond au nombre de la case actuelle
                         grille[ligne2][colonne] = 0 # On vide la case précédente
+                        grille[ligne][colonne] *= 2 # On fusionne les nombres des deux cases par une multiplication
                         break
-        
-        
-        for ligne in range(len(grille) -1): # Pour chaque ligne de la grille
+
+                    break
+
+                        
+        for ligne in range(len(grille) -1): # Pour chaque ligne de la grille après la première
+            print("Numéro de la ligne :", ligne)
+            #print("Ligne actuelle :", grille[ligne])
+
+            if ligne == len(grille) -1:
+                print(f"La ligne n°{ligne} (compte à partir de 0) est la dernière de la grille !")
+                
             for colonne in range(len(grille[ligne])): # Pour chaque colonne de la ligne
                 case_actuelle = grille[ligne][colonne] # Case actuelle
-                case_suivante = grille[ligne +1][colonne] # Case de la ligne suivante
-                if grille[ligne+1][colonne] == 0: # Si la case suivante est vide
+                for ligne2 in range(ligne+1, len(grille)): # Pour chaque ligne après la ligne actuelle
+                    #print(ligne2)
+                    case_suivante = grille[ligne2][colonne] # Case dans la ligne suivante
+                    if case_suivante == 0 and case_actuelle > 0: # Si la case de la ligne suivante est vide et que la case actuelle ne l'est pas
+                        grille[ligne2][colonne] = case_actuelle # Déplacer le nombre de la case actuelle vers la ligne en-dessous
+                        grille[ligne][colonne] = 0 # On vide la ligne actuelle
+                        break # On quitte la boucle immédiatement                                        
+                
                     
-                    if case_actuelle > 0: # Si la case actuelle n'est pas vide
-                        grille[ligne+1][colonne] = case_actuelle  # Déplacer le nombre de la case actuelle sur la case suivante
-                        grille[ligne][colonne] = 0 # On vide la case actuelle
-                        #grille[ligne +1][colonne] = generer_nombre_a_apparaitre() # On génère un nouveau nombre dans la case vidée
-
+        
+       
                 
 
         coords_apparation_nombre = coords_aleat(grille) # Générer des coordonnées aléatoires pour le nouveau nombre à générer
@@ -257,8 +289,19 @@ def jeu():
         deplacer_nombres(grille, direction) # Déplacer les nombres de la grille dans la direction correspondante à la touche
         afficher_grille(grille) # Afficher la grille
 
+    if grille_pleine(grille): # Si la grille de jeu est pleine
+        print("Fin de la partie ! La grille est pleine.")
 
-jeu()
+
+
+while True:
+    jeu() # Lancer une nouvelle partie
+    rejouer = input("Voulez vous rejouer (oui/non) ? ")  # Demander au joueur s'il souhaite rejouer
+    if rejouer == "oui": # Si le joueur veut rejour
+        jeu()
+
+    else: # Si le joueur veut arrêter de jouer
+        break  # On quitte la boucle, ce qui arrête le jeu    
 
 
 
