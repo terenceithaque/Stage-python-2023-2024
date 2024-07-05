@@ -1,5 +1,8 @@
 # Jeu de 2048 en ligne de commande
 import random
+from score import score as score_joueur # Importer la variable score du module éponyme. Elle sert de compteur de points du joueur
+from score import meilleur_score as best_score # Importer le meilleur score du joueur
+
 
 touches = ["z","q","s","d"] # Listes des touches auxquelles le jeu réagit
 
@@ -140,7 +143,7 @@ def deplacer_nombres(grille, direction):
                             grille[ligne+1][colonne] = 0 # On vide la case suivante
                         #grille[ligne +1][colonne] = generer_nombre_a_apparaitre() # On génère un nouveau nombre dans la case vidée
 
-            continue
+            
                         
                         
             
@@ -207,6 +210,7 @@ def deplacer_nombres(grille, direction):
 
         # Logique du déplacement à mettre ci-dessous
 
+
         for ligne in range(len(grille)): # On parcoure les lignes de la grille
             #print("Numéro de la ligne :", ligne)
             for colonne in range(len(grille[ligne])): # Pour chaque colonne de la ligne
@@ -218,7 +222,9 @@ def deplacer_nombres(grille, direction):
                         grille[ligne][colonne] *= 2 # On fusionne les nombres des deux cases par une multiplication
                         break
 
-                    break
+                    
+
+                
 
                         
         for ligne in range(len(grille) -1): # Pour chaque ligne de la grille après la première
@@ -232,8 +238,9 @@ def deplacer_nombres(grille, direction):
                 case_actuelle = grille[ligne][colonne] # Case actuelle
                 for ligne2 in range(ligne+1, len(grille)): # Pour chaque ligne après la ligne actuelle
                     #print(ligne2)
+                    lignes_entre = grille[ligne+1: ligne2] # Lignes comprises entre la ligne actuelle et chaque ligne suivante
                     case_suivante = grille[ligne2][colonne] # Case dans la ligne suivante
-                    if case_suivante == 0 and case_actuelle > 0: # Si la case de la ligne suivante est vide et que la case actuelle ne l'est pas
+                    if case_suivante == 0 and case_actuelle > 0 and not all(not grille[line][colonne]==0 for line in range(len(grille))): # Si la case de la ligne suivante est vide et que toutes les suivantes le sont pas 
                         grille[ligne2][colonne] = case_actuelle # Déplacer le nombre de la case actuelle vers la ligne en-dessous
                         grille[ligne][colonne] = 0 # On vide la ligne actuelle
                         break # On quitte la boucle immédiatement                                        
@@ -257,7 +264,36 @@ def deplacer_nombres(grille, direction):
         print("Déplacement vers la droite")
 
 
-        # Logique du déplacement à mettre ci-dessous          
+        # Logique du déplacement à mettre ci-dessous    
+        for ligne in range(len(grille)): # Pour chaque ligne de la grille
+            for colonne in range(len(grille[ligne])-1): # Pour chaque colonne de la grille
+                #print(f"Coords. de la case actuelle : {ligne} (ligne) {colonne} (colonne)")
+                case_actuelle = grille[ligne][colonne] # Case actuelle
+                for colonne2 in range(colonne+1, len(grille[ligne])): # Pour chaque colonne qui suit l'actuelle
+                    #print(f"Coords. de la case suivante : {ligne} (ligne) {colonne2} (colonne)")
+                    case_apres = grille[ligne][colonne2] # Case après l'actuelle
+                    cases_entre = grille[ligne][colonne+1:colonne2] # cases entre la case actuelle et les suivantes
+                    print(f"Cases entre la colonne n° {colonne} et la colonne n°{colonne2} (compte à partir de zéro):", cases_entre)
+                    """for case in colonnes_entre: # Pour chaque case dans les colonnes situées entre la colonne actuelle et les suivantes
+                        if case > 0 and case != case_actuelle: # Si le contenu de la case est supérieur à zéro et que son contenu est différent de celui de la case actuelle
+                            break"""
+                    
+                    if any(not case==0 for case in cases_entre): # Si des cases comprises entre l'actuelle et l'une des suivantes ne sont pas vides
+                        continue # Ignorer la case actuelle et continuer la boucle
+
+                    elif case_actuelle == case_apres  and not any(not case==0 for case in cases_entre): # Si le contenu de la case actuelle vaut celui de la case suivante et que toutes les cases entre ne sont pas vides
+                        grille[ligne][colonne2] = grille[ligne][colonne]*2 # On fusionne les deux cases par une multiplication
+                        grille[ligne][colonne] = 0 # On vide la case actuelle
+                        break
+
+                    
+
+                    
+                    
+
+                    
+
+                              
 
 
 
