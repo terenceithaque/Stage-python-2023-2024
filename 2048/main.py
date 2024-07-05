@@ -1,7 +1,7 @@
 # Jeu de 2048 en ligne de commande
 import random
-from score import score as score_joueur # Importer la variable score du module éponyme. Elle sert de compteur de points du joueur
-from score import meilleur_score as best_score # Importer le meilleur score du joueur
+from score import * # Importer l'entièreté du module score
+
 
 
 touches = ["z","q","s","d"] # Listes des touches auxquelles le jeu réagit
