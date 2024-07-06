@@ -4,6 +4,12 @@ from score import * # Importer l'entièreté du module score
 
 
 
+
+meilleur_score = MeilleurScore() # Meilleur score du joueur
+score = Score()# Score actuel du joueur. S'il est supérieur au meilleur score, le meilleur score sera actualisé.
+
+
+
 touches = ["z","q","s","d"] # Listes des touches auxquelles le jeu réagit
 
 coords_cases_occuppees = [] # Coordonnées des cases occupées 
@@ -102,6 +108,7 @@ def grille_pleine(grille):
 
 def deplacer_nombres(grille, direction):
     "Déplacer des nombres de la grille selon une direction précise"
+    global score
     if direction == "haut": # Si on doit déplacer les nombres vers le haut
         #print("Déplacement vers le haut")
 
@@ -120,7 +127,9 @@ def deplacer_nombres(grille, direction):
                         if case_suivante== nombre_case_actuelle: # Si le nombre dans la case sur la ligne précédente correspond à celui de la case actuelle
                             grille[ligne2][colonne] = 0 # Mettre la case précédente à 0
                             grille[ligne][colonne] = nombre_case_actuelle*2 # Supprimer le nombre de la case actuelle
-                        
+                            score.augmenter(nombre_case_actuelle*2) # Augmenter le score du joueur
+                            meilleur_score.actualiser(score.valeur) # Actualiser le meilleur score
+                            meilleur_score.sauvegarder() # Sauvegarder le meilleur score
                         
                         
                         
@@ -189,6 +198,9 @@ def deplacer_nombres(grille, direction):
                         if grille[ligne][colonne] == case_suivante: # Si le nombre dans la case actuelle correspond à celui dans la case suivante
                             grille[ligne][colonne] = grille[ligne][colonne2]*2 # On fusionne les nombres de la case actuelle et de la case suivante par une multiplication
                             grille[ligne][colonne2] = 0 # On vide la case actuelle
+                            score.augmenter(grille[ligne][colonne]) # Augmenter le score du joueur
+                            meilleur_score.actualiser(score.valeur) # Actualiser le meilleur score
+                            meilleur_score.sauvegarder() # Sauvegarder le meilleur score
                         #grille[ligne][colonne] = generer_nombre_a_apparaitre() # On vide la case actuelle
 
 
@@ -220,6 +232,9 @@ def deplacer_nombres(grille, direction):
                     if grille[ligne2][colonne] == nombre_case_actuelle: # Si le nombre contenant dans une des cases précédentes correspond au nombre de la case actuelle
                         grille[ligne2][colonne] = 0 # On vide la case précédente
                         grille[ligne][colonne] *= 2 # On fusionne les nombres des deux cases par une multiplication
+                        score.augmenter(grille[ligne][colonne]*2) # Augmenter le score du joueur
+                        meilleur_score.actualiser(score.valeur) # Actualiser le meilleur score
+                        meilleur_score.sauvegarder() # Sauvegarder le meilleur score
                         break
 
                     
@@ -284,6 +299,9 @@ def deplacer_nombres(grille, direction):
                     elif case_actuelle == case_apres  and not any(not case==0 for case in cases_entre): # Si le contenu de la case actuelle vaut celui de la case suivante et que toutes les cases entre ne sont pas vides
                         grille[ligne][colonne2] = grille[ligne][colonne]*2 # On fusionne les deux cases par une multiplication
                         grille[ligne][colonne] = 0 # On vide la case actuelle
+                        score.augmenter(grille[ligne][colonne2]) # Augmenter le score du joueur
+                        meilleur_score.actualiser(score.valeur) # Actualiser le meilleur score
+                        meilleur_score.sauvegarder() # Sauvegarder le meilleur score
                         break
 
                     
@@ -304,6 +322,12 @@ def verifier_nombres_equivalents(direction):
 """
 
 
+def afficher_score():
+    "Afficher le score du joueur"
+    print(f"Score : {score.valeur}")
+    print(f"Meilleur : {meilleur_score.valeur}")
+
+
 
 def jeu():
     "La fonction jeu génère une nouvelle grille via generer_grille et démarre une nouvelle boucle de jeu"
@@ -315,7 +339,8 @@ def jeu():
         if i == 1:
             mettre_a_jour_grille(grille=grille, ligne=1, colonne=0, nombre=nombre) # Mettre à jour la grille pour qu'elle contienne le premier nombre généré
             """
-
+    
+    afficher_score() # Afficher le score du joueur
     afficher_grille(grille) # Afficher la grille
 
     while not grille_pleine(grille):  # Tant que la grille de jeu n'est pas pleine
@@ -323,6 +348,7 @@ def jeu():
         
         direction = touches_directions[touche] # Direction correspondante à la touche pressée
         deplacer_nombres(grille, direction) # Déplacer les nombres de la grille dans la direction correspondante à la touche
+        afficher_score() # Afficher le score du joueur
         afficher_grille(grille) # Afficher la grille
 
     if grille_pleine(grille): # Si la grille de jeu est pleine
