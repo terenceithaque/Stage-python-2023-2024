@@ -89,6 +89,14 @@ def afficher_grille(grille):
         print(ligne) # Afficher la grille
 
 
+
+def determiner_nouvel_objectif(liste_objectifs, objectif_actuel=2048):
+    "Déterminer le prochain objectif que le joueur devra atteindre"
+    for objectif in liste_objectifs: # Pour chaque objectif de la liste
+        if objectif > objectif_actuel: # Si l'objectif est supérieur à l'actuel
+            return objectif # Retourner cet objectif
+
+
 def grille_pleine(grille):
     "Vérifier si la grille de jeu est pleine"
     lignes_pleines = [] # Listes des lignes pleines
@@ -100,6 +108,16 @@ def grille_pleine(grille):
         return True # On indique que la grille est vide
 
     return False # Sinon, on indique que la grille n'est pas vide 
+
+
+
+def objectif_atteint(grille, objectif=2048):
+    "Vérifier si le joueur atteint l'objectif (le nombre à obtenir pour gagner), par défaut 2048"
+    for ligne in range(len(grille)): # Pour chaque ligne de la grille
+        if objectif in grille[ligne]: # Si la ligne possède une case contenant le nombre à atteindre
+            return True # L'objectif est atteint, on retourne alors True
+        
+    return False # Si l'objectif n'est pas atteint, ou retourne False    
 
 
 
@@ -117,7 +135,7 @@ def deplacer_nombres(grille, direction):
         for ligne in range(len(grille) -1) : # Pour chaque ligne du jeu
             for colonne in range(len(grille[ligne])): # Pour chaque colonne de la ligne
                 nombre_case_actuelle = grille[ligne][colonne] # Nombre contenu dans la case actuelle
-                for ligne2 in range(ligne+1, len(grille)): # Parcourir toutes les lignes à partir de l'actuelle
+                for ligne2 in range(ligne+1, len(grille)): # Parcourir toutes les lignes à partir de l'actuelle (précédant donc l'actuelle dans l'autre sens)
                     if nombre_case_actuelle > 0: # Si le nombre est supérieur à zéro
 
                         case_suivante = grille[ligne2][colonne] # Case dans la ligne suivante
@@ -126,10 +144,14 @@ def deplacer_nombres(grille, direction):
 
                         if case_suivante== nombre_case_actuelle: # Si le nombre dans la case sur la ligne précédente correspond à celui de la case actuelle
                             grille[ligne2][colonne] = 0 # Mettre la case précédente à 0
-                            grille[ligne][colonne] = nombre_case_actuelle*2 # Supprimer le nombre de la case actuelle
+                            grille[ligne][colonne] = nombre_case_actuelle*2 # Déplacer le nombre de la case sur la ligne précédente sur la case actuelle
                             score.augmenter(nombre_case_actuelle*2) # Augmenter le score du joueur
                             meilleur_score.actualiser(score.valeur) # Actualiser le meilleur score
                             meilleur_score.sauvegarder() # Sauvegarder le meilleur score
+
+                        elif case_suivante > nombre_case_actuelle or nombre_case_actuelle > case_suivante: # Si le nombre de la case suivante est supérieur à celui de la case actuelle ou dans la situation inverse
+                            break    
+
                         
                         
                         
@@ -150,8 +172,9 @@ def deplacer_nombres(grille, direction):
                         if case_suivante > 0: # Si la case suivante n'est pas vide
                             grille[ligne][colonne] = case_suivante # Déplacer le nombre de la case suivante sur la case actuelle
                             grille[ligne+1][colonne] = 0 # On vide la case suivante
+                            
                         #grille[ligne +1][colonne] = generer_nombre_a_apparaitre() # On génère un nouveau nombre dans la case vidée
-
+            
             
                         
                         
@@ -201,6 +224,10 @@ def deplacer_nombres(grille, direction):
                             score.augmenter(grille[ligne][colonne]) # Augmenter le score du joueur
                             meilleur_score.actualiser(score.valeur) # Actualiser le meilleur score
                             meilleur_score.sauvegarder() # Sauvegarder le meilleur score
+
+
+                        elif case_suivante != grille[ligne][colonne] and case_suivante > 0:
+                            break   
                         #grille[ligne][colonne] = generer_nombre_a_apparaitre() # On vide la case actuelle
 
 
@@ -229,13 +256,18 @@ def deplacer_nombres(grille, direction):
                 nombre_case_actuelle = grille[ligne][colonne] # Nombre dans la case actuelle
                 for ligne2 in range(ligne-1, -1, -1): # Pour chaque ligne avant la ligne actuelle
                     #print("Ligne précédent la ligne actuelle :", ligne2)
-                    if grille[ligne2][colonne] == nombre_case_actuelle: # Si le nombre contenant dans une des cases précédentes correspond au nombre de la case actuelle
+                    if grille[ligne2][colonne] == nombre_case_actuelle: # Si le nombre contenu dans une des cases précédentes correspond au nombre de la case actuelle
                         grille[ligne2][colonne] = 0 # On vide la case précédente
                         grille[ligne][colonne] *= 2 # On fusionne les nombres des deux cases par une multiplication
                         score.augmenter(grille[ligne][colonne]*2) # Augmenter le score du joueur
                         meilleur_score.actualiser(score.valeur) # Actualiser le meilleur score
                         meilleur_score.sauvegarder() # Sauvegarder le meilleur score
                         break
+
+                    elif grille[ligne2][colonne] > nombre_case_actuelle or nombre_case_actuelle > grille[ligne2][colonne]: # Si le nombre contenu dans une des cases précédentes est supérieur au nombre de la case actuelle ou dans la situation inverse
+                        break 
+
+
 
                     
 
@@ -254,11 +286,17 @@ def deplacer_nombres(grille, direction):
                 for ligne2 in range(ligne+1, len(grille)): # Pour chaque ligne après la ligne actuelle
                     #print(ligne2)
                     lignes_entre = grille[ligne+1: ligne2] # Lignes comprises entre la ligne actuelle et chaque ligne suivante
+                    print(f"Lignes entre {ligne} et {ligne2}: {lignes_entre}")
                     case_suivante = grille[ligne2][colonne] # Case dans la ligne suivante
-                    if case_suivante == 0 and case_actuelle > 0 and not all(not grille[line][colonne]==0 for line in range(len(grille))): # Si la case de la ligne suivante est vide et que toutes les suivantes le sont pas 
+
+                    
+                    
+                    if case_suivante == 0 and case_actuelle > 0: # Si la case de la ligne suivante est vide et que toutes les suivantes le sont pas 
                         grille[ligne2][colonne] = case_actuelle # Déplacer le nombre de la case actuelle vers la ligne en-dessous
                         grille[ligne][colonne] = 0 # On vide la ligne actuelle
-                        break # On quitte la boucle immédiatement                                        
+                        break # On quitte la boucle immédiatement 
+
+                                                 
                 
                     
         
@@ -293,16 +331,20 @@ def deplacer_nombres(grille, direction):
                         if case > 0 and case != case_actuelle: # Si le contenu de la case est supérieur à zéro et que son contenu est différent de celui de la case actuelle
                             break"""
                     
-                    if any(not case==0 for case in cases_entre): # Si des cases comprises entre l'actuelle et l'une des suivantes ne sont pas vides
+                    if any(case!=0 for case in cases_entre): # Si des cases comprises entre l'actuelle et l'une des suivantes ne sont pas vides
                         continue # Ignorer la case actuelle et continuer la boucle
 
-                    elif case_actuelle == case_apres  and not any(not case==0 for case in cases_entre): # Si le contenu de la case actuelle vaut celui de la case suivante et que toutes les cases entre ne sont pas vides
+                    elif case_actuelle == case_apres: # Si le contenu de la case actuelle vaut celui d'une des cases
                         grille[ligne][colonne2] = grille[ligne][colonne]*2 # On fusionne les deux cases par une multiplication
                         grille[ligne][colonne] = 0 # On vide la case actuelle
                         score.augmenter(grille[ligne][colonne2]) # Augmenter le score du joueur
                         meilleur_score.actualiser(score.valeur) # Actualiser le meilleur score
                         meilleur_score.sauvegarder() # Sauvegarder le meilleur score
                         break
+
+                    elif case_apres == 0: # Si la case suivante est vide
+                        grille[ligne][colonne2] = case_actuelle # Déplacer le nombre de la case actuelle vers la case vide
+                        grille[ligne][colonne] = 0 # Vider la case actuelle
 
                     
 
@@ -332,6 +374,12 @@ def afficher_score():
 def jeu():
     "La fonction jeu génère une nouvelle grille via generer_grille et démarre une nouvelle boucle de jeu"
     grille = generer_grille() # Générer une nouvelle grille de jeu
+    objectif = 2048 # Objectif que le joueur doit atteindre
+    objectifs = [objectif, objectif*2] # Liste des objectifs de nombres à atteindre que le joueur peut réaliser, s'il dépasse l'objectif initial de 2048. Chaque nouvel objectif correspond au précédent multiplié par deux
+    for i in range(1, 4): # Ajouter trois objectifs
+        objectifs.append(objectifs[i]*2) # Chaque nouvel objectif correspond au précédent multiplié par 2
+    
+    print("Objectifs :", objectifs)
     """for i in range(2):
         nombre = generer_nombre_a_apparaitre() # Générer un premier nombre, soit un 2, soit un 4
         if i == 0:
@@ -350,6 +398,15 @@ def jeu():
         deplacer_nombres(grille, direction) # Déplacer les nombres de la grille dans la direction correspondante à la touche
         afficher_score() # Afficher le score du joueur
         afficher_grille(grille) # Afficher la grille
+
+        if objectif_atteint(grille, objectif=objectif): # Si l'objectif actuel a été atteint
+            objectif_suivant = determiner_nouvel_objectif(liste_objectifs=objectifs, objectif_actuel=objectif) # Déterminer quel sera l'objectif suivant
+            continuer = input(f"Désirez-vous continuer à jouer ? Votre objectif sera modifié, vous devrez essayer d'atteindre {objectif_suivant} (oui/non): ") # Demander au joueur s'il souhaite continuer avec un nouvel objectif
+            if continuer == "oui": # Si le joueur veut continuer à jouer
+                objectif = objectif_suivant
+                continue
+            else:
+                return
 
     if grille_pleine(grille): # Si la grille de jeu est pleine
         print("Fin de la partie ! La grille est pleine.")
