@@ -26,7 +26,7 @@ touches_directions = {
 
 def generer_grille():
     "Générer une grille de jeu de dimensions 4x4"
-    grille = [[2,0,2,2] for i in range(4)] # Générer une grille de quatre case par ligne
+    grille = [[0,0,0,0] for i in range(4)] # Générer une grille de quatre case par ligne
     return grille
 
 
@@ -124,6 +124,8 @@ def objectif_atteint(grille, objectif=2048):
 
 
 
+
+
 def deplacer_nombres(grille, direction):
     "Déplacer des nombres de la grille selon une direction précise"
     global score
@@ -141,7 +143,7 @@ def deplacer_nombres(grille, direction):
                         case_suivante = grille[ligne2][colonne] # Case dans la ligne suivante
                         """if case_precedente == 0 :# Si la case sur la ligne précédente est vide
                             case_precedente = nombre_case_actuelle # Mettre à jour le nombre de la case sur la ligne précédente"""
-
+                        
                         if case_suivante== nombre_case_actuelle: # Si le nombre dans la case sur la ligne précédente correspond à celui de la case actuelle
                             grille[ligne2][colonne] = 0 # Mettre la case précédente à 0
                             grille[ligne][colonne] = nombre_case_actuelle*2 # Déplacer le nombre de la case sur la ligne précédente sur la case actuelle
@@ -149,8 +151,8 @@ def deplacer_nombres(grille, direction):
                             meilleur_score.actualiser(score.valeur) # Actualiser le meilleur score
                             meilleur_score.sauvegarder() # Sauvegarder le meilleur score
 
-                        elif case_suivante > nombre_case_actuelle or nombre_case_actuelle > case_suivante: # Si le nombre de la case suivante est supérieur à celui de la case actuelle ou dans la situation inverse
-                            break    
+                        else: # Sinon 
+                            continue # Continuer la boucle en ignorant le reste
 
                         
                         
@@ -225,9 +227,11 @@ def deplacer_nombres(grille, direction):
                             meilleur_score.actualiser(score.valeur) # Actualiser le meilleur score
                             meilleur_score.sauvegarder() # Sauvegarder le meilleur score
 
-
-                        elif case_suivante != grille[ligne][colonne] and case_suivante > 0:
-                            break   
+                    else: # Si la case suivante est vide
+                        print(f"La case (coords. {ligne}, {colonne2}) est vide")
+                        if grille[ligne][colonne] > 0: # Mais que l'actuelle ne l'est pas
+                            grille[ligne][colonne2] = grille[ligne][colonne] # Déplacer le nombre de la colonne actuelle vers la colonne suivante
+                            grille[ligne][colonne] = 0 # Vider la case actuelle
                         #grille[ligne][colonne] = generer_nombre_a_apparaitre() # On vide la case actuelle
 
 
@@ -256,7 +260,7 @@ def deplacer_nombres(grille, direction):
                 nombre_case_actuelle = grille[ligne][colonne] # Nombre dans la case actuelle
                 for ligne2 in range(ligne-1, -1, -1): # Pour chaque ligne avant la ligne actuelle
                     #print("Ligne précédent la ligne actuelle :", ligne2)
-                    if grille[ligne2][colonne] == nombre_case_actuelle: # Si le nombre contenu dans une des cases précédentes correspond au nombre de la case actuelle
+                    if grille[ligne2][colonne] == nombre_case_actuelle and grille[ligne2][colonne] > 0: # Si le nombre contenu dans une des cases précédentes correspond au nombre de la case actuelle
                         grille[ligne2][colonne] = 0 # On vide la case précédente
                         grille[ligne][colonne] *= 2 # On fusionne les nombres des deux cases par une multiplication
                         score.augmenter(grille[ligne][colonne]*2) # Augmenter le score du joueur
@@ -264,8 +268,10 @@ def deplacer_nombres(grille, direction):
                         meilleur_score.sauvegarder() # Sauvegarder le meilleur score
                         break
 
-                    elif grille[ligne2][colonne] > nombre_case_actuelle or nombre_case_actuelle > grille[ligne2][colonne]: # Si le nombre contenu dans une des cases précédentes est supérieur au nombre de la case actuelle ou dans la situation inverse
-                        break 
+                    elif grille[ligne2][colonne] == 0 and nombre_case_actuelle > 0: # Si la case précédente est vide mais que l'actuelle ne l'est pas
+                        grille[ligne2][colonne] = nombre_case_actuelle # On déplace le nombre de la case actuelle sur la case précédente
+                        grille[ligne][colonne] = 0 # On vide la case actuelle
+
 
 
 
@@ -290,11 +296,14 @@ def deplacer_nombres(grille, direction):
                     case_suivante = grille[ligne2][colonne] # Case dans la ligne suivante
 
                     
-                    
-                    if case_suivante == 0 and case_actuelle > 0: # Si la case de la ligne suivante est vide et que toutes les suivantes le sont pas 
+
+                    if case_suivante == 0 and case_actuelle > 0: # Si la case de la ligne suivante est vide et que l'actuelle ne l'est pas
                         grille[ligne2][colonne] = case_actuelle # Déplacer le nombre de la case actuelle vers la ligne en-dessous
                         grille[ligne][colonne] = 0 # On vide la ligne actuelle
                         break # On quitte la boucle immédiatement 
+
+                    else:
+                        break
 
                                                  
                 
@@ -346,6 +355,17 @@ def deplacer_nombres(grille, direction):
                         grille[ligne][colonne2] = case_actuelle # Déplacer le nombre de la case actuelle vers la case vide
                         grille[ligne][colonne] = 0 # Vider la case actuelle
 
+        
+        coords_apparation_nombre = coords_aleat(grille) # Générer des coordonnées aléatoires pour le nouveau nombre à générer
+        print("Coordonnées du nombre à apparaitre :", coords_apparation_nombre)
+        ligne_nombre = coords_apparation_nombre[0] # Ligne dans laquelle le nombre doit apparaître
+        #print("Ligne dans laquelle le nombre doit apparaitre :", ligne_nombre)
+        colonne_nombre = coords_apparation_nombre[1] # Colonne de la ligne dans laquelle le nombre doit apparaître
+        #print("Colonne de la ligne dans laquelle le nombre doit apparaitre :", colonne_nombre)
+
+        grille[ligne_nombre][colonne_nombre] = generer_nombre_a_apparaitre() # Générer le nombre et le placer dans la grille aux coordonnées choisies
+                                        
+
                     
 
                     
@@ -366,7 +386,7 @@ def verifier_nombres_equivalents(direction):
 
 def afficher_score():
     "Afficher le score du joueur"
-    print(f"Score : {score.valeur}")
+    print(f"Score : {score.valeur}", end=" ")
     print(f"Meilleur : {meilleur_score.valeur}")
 
 
@@ -374,6 +394,7 @@ def afficher_score():
 def jeu():
     "La fonction jeu génère une nouvelle grille via generer_grille et démarre une nouvelle boucle de jeu"
     grille = generer_grille() # Générer une nouvelle grille de jeu
+    grille[0][0] = generer_nombre_a_apparaitre() # Générer un nombre (2 ou 4) pour permettre au joueur de commencer la partie
     objectif = 2048 # Objectif que le joueur doit atteindre
     objectifs = [objectif, objectif*2] # Liste des objectifs de nombres à atteindre que le joueur peut réaliser, s'il dépasse l'objectif initial de 2048. Chaque nouvel objectif correspond au précédent multiplié par deux
     for i in range(1, 4): # Ajouter trois objectifs
@@ -399,14 +420,19 @@ def jeu():
         afficher_score() # Afficher le score du joueur
         afficher_grille(grille) # Afficher la grille
 
-        if objectif_atteint(grille, objectif=objectif): # Si l'objectif actuel a été atteint
+        if objectif_atteint(grille, objectif=objectif) and objectif != objectifs[len(objectifs) -1]: # Si l'objectif actuel a été atteint et qu'il ne s'agissait pas du dernier
             objectif_suivant = determiner_nouvel_objectif(liste_objectifs=objectifs, objectif_actuel=objectif) # Déterminer quel sera l'objectif suivant
+            print(f"Vous avez atteint l'objectif de {objectif}. Félicitations !")
             continuer = input(f"Désirez-vous continuer à jouer ? Votre objectif sera modifié, vous devrez essayer d'atteindre {objectif_suivant} (oui/non): ") # Demander au joueur s'il souhaite continuer avec un nouvel objectif
-            if continuer == "oui": # Si le joueur veut continuer à jouer
+            if continuer.lower() == "oui": # Si le joueur veut continuer à jouer
                 objectif = objectif_suivant
                 continue
             else:
                 return
+            
+        elif objectif == objectifs[len(objectifs) -1]: # Si le joueur a atteint tous les objectifs du jeu
+            print("Vous avez atteint tous les objectifs et terminé(e) la partie. Félicitations !") # Afficher un message de victoire au joueur
+            return
 
     if grille_pleine(grille): # Si la grille de jeu est pleine
         print("Fin de la partie ! La grille est pleine.")
@@ -414,13 +440,18 @@ def jeu():
 
 
 while True:
+    """Cette boucle démarre une nouvelle partie puis demande au joueur s'il souhaite rejouer à chaque partie terminée. S'il répond 'oui', alors une nouvelle partie est créée, 
+    sinon la boucle s'arrête ici."""
     jeu() # Lancer une nouvelle partie
     rejouer = input("Voulez vous rejouer (oui/non) ? ")  # Demander au joueur s'il souhaite rejouer
-    if rejouer == "oui": # Si le joueur veut rejour
+    if rejouer.lower() == "oui": # Si le joueur veut rejouer
         jeu()
 
     else: # Si le joueur veut arrêter de jouer
-        break  # On quitte la boucle, ce qui arrête le jeu    
+        break  # On quitte la boucle, ce qui arrête le jeu  
+
+
+print("Vous avez quitté(e) le jeu.")      
 
 
 
