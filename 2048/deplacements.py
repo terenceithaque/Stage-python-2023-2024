@@ -1,6 +1,8 @@
 "deplacements.py gère les différents déplacements de nombres dans une grille"
+from score import *
 
-def deplacerHaut(grille, direction="haut", score_var=0, max_score_var=0):
+
+def deplacerHaut(grille, direction="haut", score_var=Score(), max_score_var=MeilleurScore()):
     "Déplacer les nombres vers le haut et mettre à jour le score et le meilleur score du joueur"
     if direction == "haut": # Si on doit déplacer les nombres vers le haut
         #print("Déplacement vers le haut")
@@ -41,7 +43,7 @@ def deplacerHaut(grille, direction="haut", score_var=0, max_score_var=0):
 
 
 
-def deplacerGauche(grille, direction="gauche", score_var=0, max_score_var=0):
+def deplacerGauche(grille, direction="gauche", score_var=Score(), max_score_var=MeilleurScore()):
     "Déplacer les nombres vers la gauche et mettre à jour le score et le meilleur score du joueur"
     if direction == "gauche":
         for ligne in range(len(grille)): # Pour chaque ligne de la grille
@@ -69,7 +71,7 @@ def deplacerGauche(grille, direction="gauche", score_var=0, max_score_var=0):
 
 
 
-def deplacerBas(grille, direction="bas", score_var=0, max_score_var=0):
+def deplacerBas(grille, direction="bas", score_var=Score(), max_score_var=MeilleurScore()):
     "Déplacer les nombres vers le bas et mettre à jour le score et le meilleur score du joueur"
     if direction == "bas":
         for ligne in range(len(grille)): # On parcoure les lignes de la grille
@@ -122,3 +124,35 @@ def deplacerBas(grille, direction="bas", score_var=0, max_score_var=0):
 
                     else:
                         break
+
+
+def deplacerDroite(grille, direction="droite", score_var=Score(), max_score_var=MeilleurScore()):
+    "Déplacer les nombres vers la droite et mettre à jour le score et le meilleur score du joueur"
+    if direction=="droite":
+        for ligne in range(len(grille)): # Pour chaque ligne de la grille
+            for colonne in range(len(grille[ligne])-1): # Pour chaque colonne de la grille
+                #print(f"Coords. de la case actuelle : {ligne} (ligne) {colonne} (colonne)")
+                case_actuelle = grille[ligne][colonne] # Case actuelle
+                for colonne2 in range(colonne+1, len(grille[ligne])): # Pour chaque colonne qui suit l'actuelle
+                    #print(f"Coords. de la case suivante : {ligne} (ligne) {colonne2} (colonne)")
+                    case_apres = grille[ligne][colonne2] # Case après l'actuelle
+                    cases_entre = grille[ligne][colonne+1:colonne2] # cases entre la case actuelle et les suivantes
+                    print(f"Cases entre la colonne n° {colonne} et la colonne n°{colonne2} (compte à partir de zéro):", cases_entre)
+                    """for case in colonnes_entre: # Pour chaque case dans les colonnes situées entre la colonne actuelle et les suivantes
+                        if case > 0 and case != case_actuelle: # Si le contenu de la case est supérieur à zéro et que son contenu est différent de celui de la case actuelle
+                            break"""
+                    
+                    if any(case!=0 for case in cases_entre): # Si des cases comprises entre l'actuelle et l'une des suivantes ne sont pas vides
+                        continue # Ignorer la case actuelle et continuer la boucle
+
+                    elif case_actuelle == case_apres: # Si le contenu de la case actuelle vaut celui d'une des cases
+                        grille[ligne][colonne2] = grille[ligne][colonne]*2 # On fusionne les deux cases par une multiplication
+                        grille[ligne][colonne] = 0 # On vide la case actuelle
+                        score_var.augmenter(grille[ligne][colonne2]) # Augmenter le score du joueur
+                        max_score_var.actualiser(score_var.valeur) # Actualiser le meilleur score
+                        max_score_var.sauvegarder() # Sauvegarder le meilleur score
+                        break
+
+                    elif case_apres == 0: # Si la case suivante est vide
+                        grille[ligne][colonne2] = case_actuelle # Déplacer le nombre de la case actuelle vers la case vide
+                        grille[ligne][colonne] = 0 # Vider la case actuelle
