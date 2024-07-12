@@ -27,8 +27,10 @@ def deplacerHaut(grille, score_var=Score(), max_score_var=MeilleurScore()):
                             score_var.augmenter(nombre_case_actuelle*2) # Augmenter le score du joueur
                             max_score_var.actualiser(score_var.valeur) # Actualiser le meilleur score
                             max_score_var.sauvegarder() # Sauvegarder le meilleur score
+                            break # Arrêter la boucle
+
                         else: # Sinon 
-                            continue # Continuer la boucle en ignorant le reste
+                            break
 
     for r in range(len(grille)): # Pour autant de lignes qu'il n'y a dans la grille              
             for ligne in range(len(grille) -1): # Pour chaque ligne de la grille

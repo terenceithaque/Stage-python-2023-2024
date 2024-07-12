@@ -16,7 +16,10 @@ class GameException(Exception):
 class InvalidDirectionException(GameException):
     "Direction de déplacement invalide pour les nombres"
     def __init__(self):
-        super().__init__(msg="Direction de déplacement invalide. Les directions valides sont 'haut', 'gauche', 'bas' et 'droite'.") # Hériter des attributs de la classe GameException
+        # Hériter des attributs de la classe GameException
+        # en passant comme argument à cette dernière le message lié à notre exception (attribut msg)
+        super().__init__(msg="Direction de déplacement invalide. Les directions valides sont 'haut', 'gauche', 'bas' et 'droite'.")  
+                                                                                                                                    
     def __repr__(self):
         return self.msg
     
