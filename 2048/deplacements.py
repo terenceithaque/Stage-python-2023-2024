@@ -2,14 +2,15 @@
 from score import *
 
 
-def deplacerHaut(grille, direction="haut", score_var=Score(), max_score_var=MeilleurScore()):
+
+
+def deplacerHaut(grille, score_var=Score(), max_score_var=MeilleurScore()):
     "Déplacer les nombres vers le haut et mettre à jour le score et le meilleur score du joueur"
-    if direction == "haut": # Si on doit déplacer les nombres vers le haut
         #print("Déplacement vers le haut")
 
         # Logique du déplacement à mettre ci-dessous
 
-        for ligne in range(len(grille) -1) : # Pour chaque ligne du jeu
+    for ligne in range(len(grille) -1) : # Pour chaque ligne du jeu
             for colonne in range(len(grille[ligne])): # Pour chaque colonne de la ligne
                 nombre_case_actuelle = grille[ligne][colonne] # Nombre contenu dans la case actuelle
                 for ligne2 in range(ligne+1, len(grille)): # Parcourir toutes les lignes à partir de l'actuelle (précédant donc l'actuelle dans l'autre sens)
@@ -29,7 +30,7 @@ def deplacerHaut(grille, direction="haut", score_var=Score(), max_score_var=Meil
                         else: # Sinon 
                             continue # Continuer la boucle en ignorant le reste
 
-        for r in range(len(grille)): # Pour autant de lignes qu'il n'y a dans la grille              
+    for r in range(len(grille)): # Pour autant de lignes qu'il n'y a dans la grille              
             for ligne in range(len(grille) -1): # Pour chaque ligne de la grille
                 for colonne in range(len(grille[ligne])): # Pour chaque colonne de la ligne
                     case_suivante = grille[ligne +1][colonne] # Case de la ligne suivante
@@ -41,12 +42,10 @@ def deplacerHaut(grille, direction="haut", score_var=Score(), max_score_var=Meil
                             
                         #grille[ligne +1][colonne] = generer_nombre_a_apparaitre() # On génère un nouveau nombre dans la case vidée  
 
-
-
-def deplacerGauche(grille, direction="gauche", score_var=Score(), max_score_var=MeilleurScore()):
+    
+def deplacerGauche(grille, score_var=Score(), max_score_var=MeilleurScore()):
     "Déplacer les nombres vers la gauche et mettre à jour le score et le meilleur score du joueur"
-    if direction == "gauche":
-        for ligne in range(len(grille)): # Pour chaque ligne de la grille
+    for ligne in range(len(grille)): # Pour chaque ligne de la grille
             #print(f"Longueur de la ligne n°{ligne} :", len(grille[ligne]))
             for colonne in range(len(grille[ligne]) -1): # On parcoure les colonnes de la ligne
                 #print("Case actuelle :", grille[ligne][colonne], end=" ")
@@ -69,12 +68,13 @@ def deplacerGauche(grille, direction="gauche", score_var=Score(), max_score_var=
                             grille[ligne][colonne] = 0 # Vider la case actuelle
                         #grille[ligne][colonne] = generer_nombre_a_apparaitre() # On vide la case actuelle
 
+    
 
 
-def deplacerBas(grille, direction="bas", score_var=Score(), max_score_var=MeilleurScore()):
+
+def deplacerBas(grille, score_var=Score(), max_score_var=MeilleurScore()):
     "Déplacer les nombres vers le bas et mettre à jour le score et le meilleur score du joueur"
-    if direction == "bas":
-        for ligne in range(len(grille)): # On parcoure les lignes de la grille
+    for ligne in range(len(grille)): # On parcoure les lignes de la grille
             #print("Numéro de la ligne :", ligne)
             for colonne in range(len(grille[ligne])): # Pour chaque colonne de la ligne
                 nombre_case_actuelle = grille[ligne][colonne] # Nombre dans la case actuelle
@@ -92,6 +92,8 @@ def deplacerBas(grille, direction="bas", score_var=Score(), max_score_var=Meille
                         grille[ligne2][colonne] = nombre_case_actuelle # On déplace le nombre de la case actuelle sur la case précédente
                         grille[ligne][colonne] = 0 # On vide la case actuelle
 
+                      
+
 
 
 
@@ -100,7 +102,7 @@ def deplacerBas(grille, direction="bas", score_var=Score(), max_score_var=Meille
                 
 
                         
-        for ligne in range(len(grille) -1): # Pour chaque ligne de la grille après la première
+    for ligne in range(len(grille) -1): # Pour chaque ligne de la grille après la première
             print("Numéro de la ligne :", ligne)
             #print("Ligne actuelle :", grille[ligne])
 
@@ -125,11 +127,11 @@ def deplacerBas(grille, direction="bas", score_var=Score(), max_score_var=Meille
                     else:
                         break
 
+    
 
-def deplacerDroite(grille, direction="droite", score_var=Score(), max_score_var=MeilleurScore()):
+def deplacerDroite(grille, score_var=Score(), max_score_var=MeilleurScore()):
     "Déplacer les nombres vers la droite et mettre à jour le score et le meilleur score du joueur"
-    if direction=="droite":
-        for ligne in range(len(grille)): # Pour chaque ligne de la grille
+    for ligne in range(len(grille)): # Pour chaque ligne de la grille
             for colonne in range(len(grille[ligne])-1): # Pour chaque colonne de la grille
                 #print(f"Coords. de la case actuelle : {ligne} (ligne) {colonne} (colonne)")
                 case_actuelle = grille[ligne][colonne] # Case actuelle
@@ -156,3 +158,5 @@ def deplacerDroite(grille, direction="droite", score_var=Score(), max_score_var=
                     elif case_apres == 0: # Si la case suivante est vide
                         grille[ligne][colonne2] = case_actuelle # Déplacer le nombre de la case actuelle vers la case vide
                         grille[ligne][colonne] = 0 # Vider la case actuelle
+
+    

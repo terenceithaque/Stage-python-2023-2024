@@ -2,6 +2,7 @@
 import random
 from score import * # Importer l'entièreté du module score
 from deplacements import *
+from game_exceptions import *
 
 
 
@@ -130,10 +131,10 @@ def objectif_atteint(grille, objectif=2048):
 def deplacer_nombres(grille, direction):
     "Déplacer des nombres de la grille selon une direction précise"
     global score
-    if direction == "haut": # Si on doit déplacer les nombres vers le haut
         #print("Déplacement vers le haut")
         # Logique du déplacement à mettre ci-dessous
-        deplacerHaut(grille, direction=direction, score_var=score, max_score_var=meilleur_score) # Déplacer les nombres vers le haut et mettre à jour le score
+    if direction == "haut": # Si on doit déplacer des nombres vers le haut
+        deplacerHaut(grille, score_var=score, max_score_var=meilleur_score) # Déplacer les nombres vers le haut et mettre à jour le score
         coords_apparation_nombre = coords_aleat(grille) # Générer des coordonnées aléatoires pour le nouveau nombre à générer
         print("Coordonnées du nombre à apparaitre :", coords_apparation_nombre)
         ligne_nombre = coords_apparation_nombre[0] # Ligne dans laquelle le nombre doit apparaître
@@ -142,18 +143,17 @@ def deplacer_nombres(grille, direction):
         #print("Colonne de la ligne dans laquelle le nombre doit apparaitre :", colonne_nombre)
         grille[ligne_nombre][colonne_nombre] = generer_nombre_a_apparaitre() # Générer le nombre et le placer dans la grille aux coordonnées choisies
 
-
         
 
 
                         
 
                         
-    if direction == "gauche": # Si on doit déplacer les nombres vers la gauche
+    elif direction == "gauche": # Si on doit déplacer les nombres vers la gauche
         #print("Déplacement vers la gauche")   
 
         # Logique du déplacement à mettre ci-dessous
-        deplacerGauche(grille, direction=direction, score_var=score, max_score_var=meilleur_score) # Déplacer les nombres vers la gauche
+        deplacerGauche(grille, score_var=score, max_score_var=meilleur_score) # Déplacer les nombres vers la gauche
         coords_apparation_nombre = coords_aleat(grille) # Générer des coordonnées aléatoires pour le nouveau nombre à générer
         print("Coordonnées du nombre à apparaitre :", coords_apparation_nombre)
         ligne_nombre = coords_apparation_nombre[0] # Ligne dans laquelle le nombre doit apparaître
@@ -163,10 +163,10 @@ def deplacer_nombres(grille, direction):
 
         grille[ligne_nombre][colonne_nombre] = generer_nombre_a_apparaitre() # Générer le nombre et le placer dans la grille aux coordonnées choisies
                     
-    if direction == "bas": # Si on doit déplacer les nombres vers le bas
+    elif direction == "bas": # Si on doit déplacer les nombres vers le bas
         #print("Déplacement vers le bas")
 
-        deplacerBas(grille, direction=direction, score_var=score, max_score_var=meilleur_score) # Déplacer les nombres vers le bas
+        deplacerBas(grille, score_var=score, max_score_var=meilleur_score) # Déplacer les nombres vers le bas
         coords_apparation_nombre = coords_aleat(grille) # Générer des coordonnées aléatoires pour le nouveau nombre à générer
         print("Coordonnées du nombre à apparaitre :", coords_apparation_nombre)
         ligne_nombre = coords_apparation_nombre[0] # Ligne dans laquelle le nombre doit apparaître
@@ -176,10 +176,10 @@ def deplacer_nombres(grille, direction):
 
         grille[ligne_nombre][colonne_nombre] = generer_nombre_a_apparaitre() # Générer le nombre et le placer dans la grille aux coordonnées choisies
 
-    if direction == "droite": # Si on doit déplacer les nombres vers la droite
+    elif direction == "droite": # Si on doit déplacer les nombres vers la droite
         print("Déplacement vers la droite")        
 
-        deplacerDroite(grille, direction=direction, score_var=score, max_score_var=meilleur_score) # Déplacer les nombres vers la droite
+        deplacerDroite(grille, score_var=score, max_score_var=meilleur_score) # Déplacer les nombres vers la droite
         coords_apparation_nombre = coords_aleat(grille) # Générer des coordonnées aléatoires pour le nouveau nombre à générer
         print("Coordonnées du nombre à apparaitre :", coords_apparation_nombre)
         ligne_nombre = coords_apparation_nombre[0] # Ligne dans laquelle le nombre doit apparaître
@@ -189,8 +189,11 @@ def deplacer_nombres(grille, direction):
 
         grille[ligne_nombre][colonne_nombre] = generer_nombre_a_apparaitre() # Générer le nombre et le placer dans la grille aux coordonnées choisies
 
-        
 
+    else: # Si la direction fournie n'est pas valide
+        raise InvalidDirectionException # Déclencher une exception
+
+    
 
         
                         
@@ -262,7 +265,7 @@ def jeu():
         touche = entree_utilisateur() # Demander la direction dans laquelle déplacer les nombres à l'utilisateur. S'il appuie sur z:vers le haut, q:vers la gauche, s:vers le bas et d:vers la droite
         
         direction = touches_directions[touche] # Direction correspondante à la touche pressée
-        deplacer_nombres(grille, direction) # Déplacer les nombres de la grille dans la direction correspondante à la touche
+        deplacer_nombres(grille, direction=direction) # Déplacer les nombres de la grille dans la direction correspondante à la touche
         afficher_score() # Afficher le score du joueur
         afficher_grille(grille) # Afficher la grille
 

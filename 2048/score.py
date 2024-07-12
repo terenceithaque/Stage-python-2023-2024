@@ -47,6 +47,8 @@ class MeilleurScore:
             self.valeur = 0 # Initialiser la valeur du meilleur score à zéro
             return self.valeur
         
+        
+        
 
     def sauvegarder(self):
         "Sauvegarder le meilleur score dans le fichier score.txt"
