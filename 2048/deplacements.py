@@ -63,6 +63,9 @@ def deplacerGauche(grille, score_var=Score(), max_score_var=MeilleurScore()):
                             max_score_var.actualiser(score_var.valeur) # Actualiser le meilleur score
                             max_score_var.sauvegarder() # Sauvegarder le meilleur score
 
+                        else: # Si la case actuelle et la case suivante contiennent des nombres différents
+                             break # Arrêter la boucle
+
                     else: # Si la case suivante est vide
                         print(f"La case (coords. {ligne}, {colonne2}) est vide")
                         if grille[ligne][colonne] > 0: # Mais que l'actuelle ne l'est pas
@@ -90,9 +93,10 @@ def deplacerBas(grille, score_var=Score(), max_score_var=MeilleurScore()):
                         max_score_var.sauvegarder() # Sauvegarder le meilleur score
                         break
 
-                    elif grille[ligne2][colonne] == 0 and nombre_case_actuelle > 0: # Si la case précédente est vide mais que l'actuelle ne l'est pas
-                        grille[ligne2][colonne] = nombre_case_actuelle # On déplace le nombre de la case actuelle sur la case précédente
-                        grille[ligne][colonne] = 0 # On vide la case actuelle
+                    
+                    
+                    else:
+                        break
 
                       
 
