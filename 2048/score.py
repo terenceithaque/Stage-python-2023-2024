@@ -1,7 +1,6 @@
 "score.py contient deux classes (Score et MeilleurScore) qui servent à gérer le score du joueur"
 import os
-
-
+ 
 class Score:
     "Objet représentant le score du joueur"
     def __init__(self):
@@ -18,7 +17,7 @@ class Score:
 class MeilleurScore:
     "Meilleur score réalisé par le joueur"
     def __init__(self): 
-        self.fichier = os.path.abspath("2048\\score.txt") # Fichier contenant le meilleur score du joueur
+        self.fichier = os.path.abspath("2048//score.txt") # Fichier contenant le meilleur score du joueur
         self.valeur = self.lire_meilleur_score() # Valeur du meilleur score, obtenue depuis le fichier score.txt
 
     def actualiser(self, valeur_score_actuel):

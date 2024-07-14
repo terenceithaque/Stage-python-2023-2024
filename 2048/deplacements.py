@@ -49,25 +49,27 @@ def deplacerGauche(grille, score_var=Score(), max_score_var=MeilleurScore()):
     "Déplacer les nombres vers la gauche et mettre à jour le score et le meilleur score du joueur"
     for ligne in range(len(grille)): # Pour chaque ligne de la grille
             #print(f"Longueur de la ligne n°{ligne} :", len(grille[ligne]))
-            for colonne in range(len(grille[ligne]) -1): # On parcoure les colonnes de la ligne
+            for colonne in range(1, len(grille[ligne])): # On parcoure les colonnes de la ligne
                 #print("Case actuelle :", grille[ligne][colonne], end=" ")
                 #print(f"Colonne dans la ligne n°{ligne} :", colonne)
-                for colonne2 in range(colonne+1, len(grille[ligne])): # Pour chaque colonne dans la ligne après la colonne actuelle
-                    case_suivante = grille[ligne][colonne2] # Nombre contenu dans la case après
+                for colonne2 in range(colonne-1, colonne): # Pour chaque colonne dans la ligne avant l'actuelle
+                    case_precedente = grille[ligne][colonne2] # Nombre contenu dans la case avant
                     #print("Case suivante :", case_suivante, end= " ")
-                    if case_suivante > 0: # Si le nombre de la case suivante est supérieur à 0
-                        if grille[ligne][colonne] == case_suivante: # Si le nombre dans la case actuelle correspond à celui dans la case suivante
-                            grille[ligne][colonne] = grille[ligne][colonne2]*2 # On fusionne les nombres de la case actuelle et de la case suivante par une multiplication
-                            grille[ligne][colonne2] = 0 # On vide la case actuelle
-                            score_var.augmenter(grille[ligne][colonne]) # Augmenter le score du joueur
+                    if case_precedente > 0: # Si le nombre de la case précédente est supérieur à 0
+                        if grille[ligne][colonne] == case_precedente: # Si le nombre dans la case actuelle correspond à celui dans la case précédente
+                            print("Le nombre de la case actuelle est égal à celui de la suivante (gauche).")
+                            grille[ligne][colonne2] = grille[ligne][colonne]*2 # On fusionne les nombres de la case actuelle et de la case précédente par une multiplication
+                            grille[ligne][colonne] = 0 # On vide la case actuelle
+                            score_var.augmenter(grille[ligne][colonne2]) # Augmenter le score du joueur
                             max_score_var.actualiser(score_var.valeur) # Actualiser le meilleur score
                             max_score_var.sauvegarder() # Sauvegarder le meilleur score
 
                         else: # Si la case actuelle et la case suivante contiennent des nombres différents
-                             break # Arrêter la boucle
+                             print("Le nombre de la case actuelle n'est pas égal à celui de la case suivante (gauche).")
+                             break
 
                     else: # Si la case suivante est vide
-                        print(f"La case (coords. {ligne}, {colonne2}) est vide")
+                        print(f"La case suivante (coords. {ligne}, {colonne2}) est vide (gauche)")
                         if grille[ligne][colonne] > 0: # Mais que l'actuelle ne l'est pas
                             grille[ligne][colonne2] = grille[ligne][colonne] # Déplacer le nombre de la colonne actuelle vers la colonne suivante
                             grille[ligne][colonne] = 0 # Vider la case actuelle
@@ -130,8 +132,8 @@ def deplacerBas(grille, score_var=Score(), max_score_var=MeilleurScore()):
                         grille[ligne][colonne] = 0 # On vide la ligne actuelle
                         break # On quitte la boucle immédiatement 
 
-                    else:
-                        break
+                    else: # Si la case suivante n'est pas vide
+                        break # On s'arrête ici
 
     
 
