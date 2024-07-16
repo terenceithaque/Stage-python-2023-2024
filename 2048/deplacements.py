@@ -1,6 +1,32 @@
 "deplacements.py gère les différents déplacements de nombres dans une grille"
 from score import *
 
+def parcourirColonne(grille, colonne=0):
+     "Parcourir une colonne à la verticale afin d'établir une liste des nombres qui y sont présents"
+     nombres_dans_col = [] # Nombres dans la colonne
+     for ligne in range(len(grille)): # Pour chaque ligne de la grille
+          for index, nombre in enumerate(grille[ligne]): # Pour chaque nombre dans la ligne
+               if index == colonne: # Si l'indice du nombre dans la ligne correspond au numéro de la colonne pour laquelle on doit lister les nombres
+                    nombres_dans_col.append(nombre) # Ajouter le nombre à la liste
+
+     return nombres_dans_col  # Retourner la liste des nombres présents dans la colonne   
+
+
+
+def nombreDansColonne(grille, colonne=0, nombre=0):
+     "Vérifier si un nombre est présent au moins deux fois dans une colonne de la grille"
+     nombres_dans_col = parcourirColonne(grille, colonne=colonne) # Liste des nombres dans la colonne
+     print(f"Nombres dans la colonne {colonne}:", nombres_dans_col)
+     for index, num in enumerate(nombres_dans_col): # Pour chaque nombre dans la colonne parcourue à la vertical
+          del nombres_dans_col[index] # Supprimer le nombre actuel de la liste afin d'éviter qu'il ne soit pris en compte
+          print(f"Nombres dans la colonne {colonne}, mis à jour:", nombres_dans_col)
+          if num in nombres_dans_col and num==nombre and not any(n > 0 for n in nombres_dans_col): # Si un nombre égal a celui qui a été effacé est présent dans la colonne,qu'il est égal au nombre recherché, et qu'il n'y a aucun nombre supérieur à zéro
+               return True # On a trouvé le nombre, on retourne True
+          
+     return False # Si le nombre recherché n'a pas été trouvé, on retourne False 
+          
+
+
 
 
 
@@ -14,13 +40,13 @@ def deplacerHaut(grille, score_var=Score(), max_score_var=MeilleurScore()):
             for colonne in range(len(grille[ligne])): # Pour chaque colonne de la ligne
                 nombre_case_actuelle = grille[ligne][colonne] # Nombre contenu dans la case actuelle
                 for ligne2 in range(ligne+1, len(grille)): # Parcourir toutes les lignes à partir de l'actuelle (précédant donc l'actuelle dans l'autre sens)
+                    #print("Ligne suivante :", grille[ligne2])
                     if nombre_case_actuelle > 0: # Si le nombre est supérieur à zéro
-
                         case_suivante = grille[ligne2][colonne] # Case dans la ligne suivante
                         """if case_precedente == 0 :# Si la case sur la ligne précédente est vide
                             case_precedente = nombre_case_actuelle # Mettre à jour le nombre de la case sur la ligne précédente"""
                         
-                        if case_suivante== nombre_case_actuelle: # Si le nombre dans la case sur la ligne précédente correspond à celui de la case actuelle
+                        if case_suivante== nombre_case_actuelle or nombreDansColonne(grille, colonne=colonne, nombre=nombre_case_actuelle): # Si le nombre dans la case sur la ligne précédente correspond à celui de la case actuelle ou qu'un nombre égal à celui de la case actuelle est présent dans la colonne
                             grille[ligne2][colonne] = 0 # Mettre la case précédente à 0
                             grille[ligne][colonne] = nombre_case_actuelle*2 # Déplacer le nombre de la case sur la ligne précédente sur la case actuelle
 
@@ -166,5 +192,6 @@ def deplacerDroite(grille, score_var=Score(), max_score_var=MeilleurScore()):
                     elif case_apres == 0: # Si la case suivante est vide
                         grille[ligne][colonne2] = case_actuelle # Déplacer le nombre de la case actuelle vers la case vide
                         grille[ligne][colonne] = 0 # Vider la case actuelle
+                        
 
     

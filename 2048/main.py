@@ -12,12 +12,11 @@ score = Score()# Score actuel du joueur. S'il est supérieur au meilleur score, 
 
 
 
-touches = ["z","q","s","d"] # Listes des touches auxquelles le jeu réagit
+touches = ["z","q","s","d"] # Listes des touches auxquelles le jeu réagit. Elles déterminent dans quel direction les nombres doivent être déplacés.
 
 coords_cases_occuppees = [] # Coordonnées des cases occupées 
 
 
-nombre_final = 2048 # Nombre final que le joueur doit obtenir pour gagner
 
 touches_directions = {
     "z":"haut",
@@ -29,7 +28,7 @@ touches_directions = {
 def generer_grille():
     "Générer une grille de jeu de dimensions 4x4"
     grille = [[0,0,0,0] for i in range(4)] # Générer une grille de quatre case par ligne
-    return grille
+    return grille # Retourner la grille nouvellement générée pour pouvoir l'utiliser en jeu
 
 
 
@@ -48,7 +47,7 @@ def mettre_a_jour_grille(grille, ligne=0, colonne=0,nombre=2):
 
 def coords_aleat(grille):
     "Générer des coordonnées aléatoires à partir d'une grille"
-    ligne = random.randint(0, len(grille) -1) # Générer un numéro de ligne ligne aléatoire
+    ligne = random.randint(0, len(grille) -1) # Générer un numéro de ligne aléatoire
     colonne = random.randint(0, len(grille[ligne]) -1) # Générer un numéro de colonne aléatoire dans la ligne
     while grille[ligne][colonne] > 0: # Si la case aux coordonnées générées est déjà prise
         # On génère un nouveau nombre pour la ligne et la colonne, jusqu'à ce que la case aux coordonnées nouvellement générées soit libre
@@ -56,28 +55,28 @@ def coords_aleat(grille):
         colonne = random.randint(0, len(grille[ligne]) -1) 
 
 
-    coords = (ligne, colonne) # coords est un tuple contenant les coordonnées
-    return coords # Retourner le tuple des coordonnées
+    coords = (ligne, colonne) # coords est un tuple contenant les coordonnées au format (ligne, colonne dans la ligne)
+    return coords # Retourner le tuple contenant les coordonées
 
 
 
 def entree_utilisateur():
     "Demander une entrée à l'utilisateur. On s'en servira pour déterminer le sens dans lequel doivent être déplacés les nombres de la grille. Si la touche pressé n'est pas définie dans le dictionnaire touches_directions, alors redemande la saisie d'une touche à l'utilisateur jusqu'à ce que celle-ci soit définie"
         
-    touche = input("Appuyez sur une seule touche (z, q, s ou d) et appuyez sur Entrée:") # Demander à l'utilisateur de presser une touche du clavuer
+    touche = input("Appuyez sur une seule touche (z, q, s ou d) et appuyez sur Entrée:") # Demander à l'utilisateur de presser une touche du clavier
     while touche not in touches: # Si l'utilisateur a appuyé sur une touche qui n'est pas comprise par le jeu
             print("La touche saisie n'est pas valide. Veuillez réessayer :") # Afficher un message à l'utilisateur pour indiquer qu'il doit réessayer
             touche = entree_utilisateur() # Redemander à l'utilisateur de saisir une touche et mettre à jour la variable contenant le résultat de la saisie pour éviter une boucle infinine
 
-    return touche # Si l'utilisateur a saisi une touche valide, la retourner
+    return touche # Une fois que l'utilisateur a saisi une touche valide, la retourner afin que le reste du jeu puisse déterminer la direction dans laquelle déplacer les nombres
 
 
 def generer_nombre_a_apparaitre():
     "Générer le nombre qui devra apparaître dans la grille quand l'utilisateur déplace des nombre dans la grille"
-    probabilite_4 = random.randint(0, 100) # Probabilité que le nombre 4 apparaisse
+    probabilite_4 = random.randint(0, 100) # Probabilité que le nombre 4 apparaisse dans la grille de jeu, en pourcentage
     print(f"Probabilité qu'un 4 apparaisse dans la grille : {probabilite_4} %")
-    if probabilite_4 >= 67: # S'il y a 67 % de chances que le nombre 4 apparaisse
-        nombre_a_apparaitre = 4 # On fait apparaître un 4
+    if probabilite_4 >= 67: # S'il y a 67 % de chances ou plus que le nombre 4 apparaisse
+        nombre_a_apparaitre = 4 # On fait apparaître un 4 dans la grille de jeu
 
     else: # Si la probabilité est inférieure à 67 %
         nombre_a_apparaitre = 2 # On fait apparaître un 2 à la place
@@ -106,15 +105,15 @@ def grille_pleine(grille):
         if not 0 in grille[ligne]: # Si aucune case n'est libre dans la ligne
             lignes_pleines.append(grille[ligne]) # Ajouter la ligne à la liste des lignes pleines
 
-    if lignes_pleines == grille: # Si la liste des lignes pleines correspond à la grille de jeu, c'est que la grille est entièrement vide
-        return True # On indique que la grille est vide
+    if lignes_pleines == grille: # Si la liste des lignes pleines correspond à la grille de jeu, c'est que la grille est entièrement pleine
+        return True # On indique que la grille est pleine
 
-    return False # Sinon, on indique que la grille n'est pas vide 
+    return False # Sinon, on indique que la grille n'est pas pleine
 
 
 
 def objectif_atteint(grille, objectif=2048):
-    "Vérifier si le joueur atteint l'objectif (le nombre à obtenir pour gagner), par défaut 2048"
+    "Vérifier si le joueur a atteint l'objectif (le nombre à obtenir pour gagner), par défaut 2048"
     for ligne in range(len(grille)): # Pour chaque ligne de la grille
         if objectif in grille[ligne]: # Si la ligne possède une case contenant le nombre à atteindre
             return True # L'objectif est atteint, on retourne alors True
@@ -131,8 +130,8 @@ def objectif_atteint(grille, objectif=2048):
 def deplacer_nombres(grille, direction):
     "Déplacer des nombres de la grille selon une direction précise"
     global score
-        #print("Déplacement vers le haut")
-        # Logique du déplacement à mettre ci-dessous
+    #print("Déplacement vers le haut")
+    # Logique du déplacement à mettre ci-dessous
     if direction == "haut": # Si on doit déplacer des nombres vers le haut
         deplacerHaut(grille, score_var=score, max_score_var=meilleur_score) # Déplacer les nombres vers le haut et mettre à jour le score
         coords_apparation_nombre = coords_aleat(grille) # Générer des coordonnées aléatoires pour le nouveau nombre à générer
@@ -191,7 +190,7 @@ def deplacer_nombres(grille, direction):
 
 
     else: # Si la direction fournie n'est pas valide
-        raise InvalidDirectionException # Déclencher une exception
+        raise InvalidDirectionException # Déclencher une exception indiquant qu'une direction invalide a été fournie
 
     
 
@@ -226,24 +225,23 @@ def deplacer_nombres(grille, direction):
 
 
 
-"""
-def verifier_nombres_equivalents(direction):
-    "Vérifier si deux nombres équivalents peuvent être additionnés dans une certaine direction"
-    pass
-"""
 
 
 def afficher_score():
     "Afficher le score du joueur"
-    print(f"Score : {score.valeur}", end=" ")
-    print(f"Meilleur : {meilleur_score.valeur}")
+    print(f"Score : {score.valeur}", end=" ") # Afficher la valeur du score actuel, en indiquant de mettre un espace à la place d'un saut à la ligne à la fin de l'affichage
+    print(f"Meilleur : {meilleur_score.valeur}") # Afficher la valeur du meilleur score
 
 
 
 def jeu():
     "La fonction jeu génère une nouvelle grille via generer_grille et démarre une nouvelle boucle de jeu"
     grille = generer_grille() # Générer une nouvelle grille de jeu
-    grille[0][0] = generer_nombre_a_apparaitre() # Générer un nombre (2 ou 4) pour permettre au joueur de commencer la partie
+    coords_depart = coords_aleat(grille)  # Générer des coordonées aléatoires pour le premier nombre à apparaître dans la grille
+    ligne_depart = coords_depart[0] # Ligne du premier nombre à apparaître
+    col_depart = coords_depart[1] # Colonne du premier nombre à apparaître
+
+    grille[ligne_depart][col_depart] = generer_nombre_a_apparaitre() # Générer un nombre (2 ou 4) pour permettre au joueur de commencer la partie
     objectif = 2048 # Objectif que le joueur doit atteindre
     objectifs = [objectif, objectif*2] # Liste des objectifs de nombres à atteindre que le joueur peut réaliser, s'il dépasse l'objectif initial de 2048. Chaque nouvel objectif correspond au précédent multiplié par deux
     for i in range(1, 4): # Ajouter trois objectifs
